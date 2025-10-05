@@ -8,7 +8,7 @@
 
 
 import requests #Sends http requests and gets html responses and store responses
-from bs4 import BeautifulSoup       
+from bs4 import BeautifulSoup   #Library to parse html(where responses are stored)    
 import csv #Library to parse html(where responses are stored)
 
 
@@ -21,6 +21,11 @@ print(response)                                         #Prints the response fro
 
 doc = BeautifulSoup(response.text, "html.parser")       #Translating it so python can understand 
 #print(doc)      
+
+file = open("countries.csv", "w", newline = "")  #Creating a csv file to store the data
+writer = csv.writer(file) 
+
+writer.writerow(["Country", "Capital", "Population", "Area(km²)"])  #Writing the headers to the csv file
 
 country_info_boxes = doc.find_all(["div"], class_ = "col-md-4 country")  #Finding all the divs with the class name country
 
@@ -42,8 +47,8 @@ for country_info_box in country_info_boxes:
     area = country_info_box.find(["span"], class_ = "country-area")
     print(area.text.strip())
 
+    writer.writerow([country.text.strip(), capital.text.strip(), population.text.strip(), area.text.strip()])  #Writing the data to the csv file
+    
     print("--------------")
     
-    
-
-
+file.close()
